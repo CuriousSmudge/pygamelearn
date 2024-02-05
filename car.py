@@ -2,8 +2,8 @@
 N = 3
 systemSize = 1
 Cycles = 3
-RedArr = [0, 1, 1, 1, 0 ,0, 1]
-BlueArr = [1, 0, 1, 0, 0 ,0, 1]
+RedArr = [".", "R", "R", "R", "." ,".", "R"]
+BlueArr = ["B", ".", "B", ".", ".", ".", "B"]
 
 # Cycle Loop
 def traffic (N, systemSize, Cycles, RedArr, BlueArr):
