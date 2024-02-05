@@ -2,7 +2,7 @@
 N = 3
 systemSize = 1
 Cycles = 3
-RedArr = [0, 1, 1, 1, 0 ,0, 1]
+RedArr = [0, 1, 1, 1, 0, 0, 1]
 BlueArr = [1, 0, 1, 0, 0 ,0, 1]
 
 # Cycle Loop
