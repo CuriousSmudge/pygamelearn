@@ -13,7 +13,10 @@ def traffic (N, systemSize, Cycles, RedArr, BlueArr):
 
 # Doing (ur mom doin doin ur mom) Simulation
 def Cycle (Arr1, Arr2, Type):
-    for x in range(0, len(Arr1), 1):
+    x = -1
+    while x < (len(Arr1) - 1):
+        x = x + 1
+    #for x in range(0, len(Arr1), 1):
         print(x)
         print(Arr1)
         if Arr1[x] != Type: # I.e traffix empty in that spot
@@ -49,7 +52,7 @@ def Cycle (Arr1, Arr2, Type):
             Arr1[x + 1] = Type
             print("about to add")
             print(x)
-            x = x + 3 #Dont iterate over same car twice
+            x = x + 2 #Dont iterate over same car twice
             print(x)
             continue
 
