@@ -52,7 +52,7 @@ def Cycle (Arr1, Arr2, Type):
             Arr1[x + 1] = Type
             print("about to add")
             print(x)
-            x = x + 2 #Dont iterate over same car twice
+            x = x + 1 #Dont iterate over same car twice
             print(x)
             continue
 
@@ -65,4 +65,5 @@ def Cycle (Arr1, Arr2, Type):
 
 #print(len(RedArr))
 
-print(Cycle(RedArr, BlueArr, "R"))
+#print(Cycle(RedArr, BlueArr, "R"))
+print(Cycle(BlueArr, RedArr, "B"))
