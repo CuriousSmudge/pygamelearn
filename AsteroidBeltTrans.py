@@ -1,21 +1,15 @@
-import pygame, sys, time, keyboard
-from pygame.locals import *
-pygame.init()
-
-# Colours
-BACKGROUND = (255, 255, 255)
-
-# Game Setup
-FPS = 60
-fpsClock = pygame.time.Clock()
-WINDOW_WIDTH = 360
-WINDOW_HEIGHT = 780
- 
-WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Purple')
+import time
+import keyboard
 
 # Variables
-yCounter=1
+S=0
+I=1
+Q=0
+
+### Random Int Tester
+#print(AsteroidPosX)
+#print(AsteroidPosY)
+#print(AsteroidStars)
 
 def increment_counter(e):
     global counter
@@ -23,53 +17,47 @@ def increment_counter(e):
 
 keyboard.on_press_key('w', increment_counter)
 
-while True:
-    for event in pygame.event.get() :
-        if event.type == QUIT :
-            pygame.quit()
-            sys.exit()
-    WINDOW.fill(BACKGROUND)
-    pygame.display.update()
-    fpsClock.tick(FPS)   
-    # Game Start
-    print('Asteroid Belt')
-    for G in range(1,11):
-        ## Getting Time for Random Int
-        Time = time.time()
-        Time = int(Time*1000000)
-        AsteroidPosY = Time % 12+1
-        AsteroidStars = Time % 9+1
-        counter = 0
-        Score = 0
+# Game Start
+print('Asteroid Belt')
+for G in range(1,11):
+    ## Getting Time for Random Int
+    Time = time.time()
+    Time = int(Time*1000000)
+    AsteroidPosX = Time % 18+1
+    AsteroidPosY = Time % 12+1
+    AsteroidStars = Time % 9+1
+    counter = 0
+    Score = 0
 
-        # Round Start
-        print('Round',G)
-        for i in range(yCounter, AsteroidPosY):
-            print("")
-        for i in range(yCounter, AsteroidStars):
-            if yCounter==1 and yCounter==4 and yCounter==7:
-                print('*');
-            else:
-                print()
-                print("".ljust(AsteroidStars))
-                print('*');
-            ## Keyboard Input - Destroying the Asteroid
-            start_time = time.time()
-            if time.time() - start_time > 5:    
-                print(counter)
-                if counter == 0:
-                    print('Crashed Into Asteroid')
-                    counter = 0
-                    break
-                elif counter == AsteroidStars:
-                    print('You Destroyed It!')
-                    Score=Score+1
-                    counter = 0
-                    break
-                elif counter < AsteroidStars and counter != 0:
-                    print('Not Strong Enough')
-                    counter = 0
-                elif counter > AsteroidStars:
-                    print('Too Strong!')
-                    counter = 0
-        print(f'You Hit {Score} Out of 10')
+    # Round Start
+    print('Round',G)
+    for i in range(I, AsteroidPosY):
+        print("")
+    for i in range(I, AsteroidStars):
+        if I==1 and I==4 and I==7:
+            print('*');
+        else:
+            print()
+            print("".ljust(AsteroidStars))
+            print('*');
+        ## Keyboard Input - Destroying the Asteroid
+        start_time = time.time()
+        while time.time() - start_time < 5:
+            pass
+        print(counter)
+        if counter == 0:
+            print('Crashed Into Asteroid')
+            counter = 0
+            break
+        elif counter == AsteroidStars:
+            print('You Destroyed It!')
+            Score=Score+1
+            counter = 0
+            break
+        elif counter < AsteroidStars and counter != 0:
+            print('Not Strong Enough')
+            counter = 0
+        elif counter > AsteroidStars:
+            print('Too Strong!')
+            counter = 0
+print('You Hit' + S + 'Out of 10')
