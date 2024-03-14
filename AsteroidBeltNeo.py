@@ -19,6 +19,7 @@ def increment_counter(e):
 
 keyboard.on_press_key('w', increment_counter)
 
+# Game Start
 print('Asteroid Belt')
 for G in range(1,11):
     ## Getting Time for Random Int
