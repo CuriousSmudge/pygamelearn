@@ -23,15 +23,11 @@ def increment_counter(e):
 
 keyboard.on_press_key('w', increment_counter)
 
+# Create a custom event for the timer
+TIMEREVENT = pygame.USEREVENT + 1
+pygame.time.set_timer(TIMEREVENT, 5000)  # 5000 milliseconds = 5 seconds
+
 while True:
-    for event in pygame.event.get() :
-        if event.type == QUIT :
-            pygame.quit()
-            sys.exit()
-    WINDOW.fill(BACKGROUND)
-    pygame.display.update()
-    fpsClock.tick(FPS)   
-    # Game Start
     print('Asteroid Belt')
     for G in range(1,11):
         ## Getting Time for Random Int
@@ -41,21 +37,22 @@ while True:
         AsteroidStars = Time % 9+1
         counter = 0
         Score = 0
-
         # Round Start
         print('Round',G)
         for i in range(yCounter, AsteroidPosY):
-            print("")
+             print("")
         for i in range(yCounter, AsteroidStars):
-            if yCounter==1 and yCounter==4 and yCounter==7:
+             if yCounter==1 and yCounter==4 and yCounter==7:
                 print('*');
-            else:
+             else:
                 print()
                 print("".ljust(AsteroidStars))
                 print('*');
-            ## Keyboard Input - Destroying the Asteroid
-            start_time = time.time()
-            if time.time() - start_time > 5:    
+        for event in pygame.event.get() :
+            if event.type == QUIT :
+                pygame.quit()
+                sys.exit()
+            elif event.type == TIMEREVENT:
                 print(counter)
                 if counter == 0:
                     print('Crashed Into Asteroid')
@@ -72,4 +69,11 @@ while True:
                 elif counter > AsteroidStars:
                     print('Too Strong!')
                     counter = 0
-        print(f'You Hit {Score} Out of 10')
+    WINDOW.fill(BACKGROUND)
+    pygame.display.update()
+    fpsClock.tick(FPS)   
+    # Game Start
+    
+
+    
+    print(f'You Hit {Score} Out of 10')
