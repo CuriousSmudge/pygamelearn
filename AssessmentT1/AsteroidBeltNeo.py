@@ -3,8 +3,6 @@
 import pygame as pg
 import random as rd
 import time as tm
-import threading
-import keyboard
 import sys
 pg.init()
  
@@ -21,11 +19,17 @@ largeAsteroid = pg.transform.smoothscale(asteroid, (1000, 1000))
 medAsteroid = pg.transform.smoothscale(asteroid, (200, 200))
 smallAsteroid = pg.transform.smoothscale(asteroid, (100, 100))
 
+explosion = pg.image.load("AssessmentT1\\Assets\\explosion.png")
+largeExplosion = pg.transform.smoothscale(explosion, (1000,1000))
+medExplosion = pg.transform.smoothscale(explosion, (250,250))
+smallExplosion = pg.transform.smoothscale(explosion, (125, 125))
+
 spaceShipY = 800
 missileY = 650
 missileFired = False
 score = 0
 counter = 0
+tempCounter = 0
 
 # Game Setup
 FPS = 60
@@ -73,6 +77,15 @@ def drawAsteroid(size: str):
       print("That's not an asteroid size stupid!!")
   pass
 
+def drawExplosion(size: str):
+  match size:
+    case "small":
+      WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 75))
+    case "med":
+      WINDOW.blit(medExplosion, (WINDOWX_CENTRE - 125, 75))
+    case "large":
+      WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, 0))
+
 # Initialising random number
 asteroidSize = rd.randint(1, 21)
 
@@ -96,7 +109,7 @@ while True :
     drawAsteroid("large")
   
   if missileFired:
-    fireMissile(counter)
+    fireMissile(tempCounter)
 
   # New section: wait for spacebar press
   for event in pg.event.get():
@@ -108,8 +121,9 @@ while True :
         counter += 1
         print(f"Counter: {counter}")
       if event.key == pg.K_SPACE:
+        tempCounter = counter
         missileFired = True
-        fireMissile(counter)
+        fireMissile(tempCounter)
         if counter == 0:
           print(f"{counter} is literally 0. We're crashing!!!")
           counter = 0
@@ -125,6 +139,7 @@ while True :
           break
         elif counter > 0:
           print(f"{counter} too much!! AAAAAAHHHHHH!!!!!")
+          asteroidSize = rd.randint(1,21)
           counter = 0
           break
   pg.display.update()
