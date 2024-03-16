@@ -1,12 +1,8 @@
-# Asteroid Belt Neo v2 pt.2 the sequel the prequel the second coming
-## By Ahseley de Weerdt
-
-import pygame, time, keyboard
+import time
+import keyboard
 
 # Variables
-S=0
 I=1
-Q=0
 
 ### Random Int Tester
 #print(AsteroidPosX)
@@ -62,4 +58,4 @@ for G in range(1,11):
         elif counter > AsteroidStars:
             print('Too Strong!')
             counter = 0
-print('You Hit' + S + 'Out of 10')
+print('You Hit' + Score + 'Out of 10')
