@@ -3,6 +3,7 @@
 import pygame as pg
 import random as rd
 import time as tm
+import threading
 import keyboard
 import sys
 pg.init()
@@ -24,6 +25,7 @@ spaceShipY = 800
 missileY = 650
 missileFired = False
 score = 0
+counter = 0
 
 # Game Setup
 FPS = 60
@@ -39,6 +41,17 @@ pg.display.set_caption('Asteroid Belt Neo Ultra X Super +')
 
 # rotatedImage, rotatedImageRect = rotate(image, angle, (coordsx, coordsy))
 
+def fireMissile(size: int):
+  global missileY, missile, missileFired, missile_fire_time
+  scaleFactor = size / 5
+  neoMissile = pg.transform.smoothscale(missile, (missile.get_width() * scaleFactor, missile.get_height() * scaleFactor))
+  if missileY >= 75:
+    missileY -= 10
+    WINDOW.blit(neoMissile, (WINDOWX_CENTRE - neoMissile.get_width() / 2, missileY))
+  else: 
+    missileY = 650
+    missileFired = False
+
 def rotate(img: pg.Surface, angle: float, centerCords: tuple) -> pg.Surface:
   topleft = centerCords
   rotatedImg = pg.transform.rotate(img, -angle)
@@ -52,7 +65,7 @@ def drawAsteroid(size: str):
       WINDOW.blit(smallAsteroid, (WINDOWX_CENTRE - 50, 75))
     case "med":
       rotate(medAsteroid, 180, (100, 100))
-      WINDOW.blit(medAsteroid, (WINDOWX_CENTRE - 100, 125))
+      WINDOW.blit(medAsteroid, (WINDOWX_CENTRE - 100, 75))
     case "large":
       rotate(largeAsteroid, 180, (500, 500))
       WINDOW.blit(largeAsteroid, (WINDOWX_CENTRE - 500, -600))
@@ -60,63 +73,61 @@ def drawAsteroid(size: str):
       print("That's not an asteroid size stupid!!")
   pass
 
+# Initialising random number
+asteroidSize = rd.randint(1, 21)
+
 # Main Game Loop
-while True :
-    # Get inputs
-    for event in pg.event.get() :
-      if event.type == pg.QUIT :
-        pg.quit()
-        sys.exit()
-      #if event.type == pg.KEYDOWN :
-        #if event.key == pg.K_w:
-          #missileFired = True
+while True :        
+  # Render elements of the game
+  WINDOW.fill(BACKGROUND)
 
-    # Render elements of the game
-    WINDOW.fill(BACKGROUND)
+  # Spaceship animation
+  if spaceShipY >= 650:
+    spaceShipY -= 1
+  WINDOW.blit(spaceShip, (WINDOWX_CENTRE - 50, spaceShipY))
 
-    # Spaceship animation
-    if spaceShipY >= 650:
-      spaceShipY -= 1
-    WINDOW.blit(spaceShip, (WINDOWX_CENTRE - 50, spaceShipY))
+  # Gametime mwahahahaha
+  # Generating random number
+  if asteroidSize < 7:
+    drawAsteroid("small")
+  elif asteroidSize < 14:
+    drawAsteroid("med")
+  else:
+    drawAsteroid("large")
+  
+  if missileFired:
+    fireMissile(counter)
 
-    # Missile animation
-    if missileFired:
-      if missileY >= 75:
-        missileY -= 10
-      else:
-        missileFired = False
-        missileY = 650
-      WINDOW.blit(missile, (WINDOWX_CENTRE - 50, missileY))
-
-    # Gametime mwahahahaha
-    for G in range (1,11):
-      # Variable reset
-      counter = 0
-      # Generating random number
-      asteroidSize = rd.randint(0, 21)
-      
-      if asteroidSize < 7:
-        drawAsteroid("small")
-      elif asteroidSize < 14:
-        drawAsteroid("med")
-      else:
-        drawAsteroid("large")
-
-        # New section: wait for spacebar press
-      spacebar_pressed = False
-      w_key_pressed = False
-      while not spacebar_pressed:
-        events = pg.event.get()
-        for event in events:
-          if event.type == pg.KEYDOWN:
-            if event.key == pg.K_w:
-              counter += 1
-              print(f"Counter: {counter}")
-            elif event.key == pg.K_SPACE:
-              spacebar_pressed = True
-              counter = 0  # Reset the counter
-
-    pg.display.update()
-    fpsClock.tick(FPS)
+  # New section: wait for spacebar press
+  for event in pg.event.get():
+    if event.type == pg.QUIT :
+      pg.quit()
+      sys.exit()
+    if event.type == pg.KEYDOWN:
+      if event.key == pg.K_w:
+        counter += 1
+        print(f"Counter: {counter}")
+      if event.key == pg.K_SPACE:
+        missileFired = True
+        fireMissile(counter)
+        if counter == 0:
+          print(f"{counter} is literally 0. We're crashing!!!")
+          counter = 0
+          break
+        elif counter < asteroidSize:
+          print(f"{counter} isn't enough!!! Try Again!!!!")
+          counter = 0
+          break
+        elif counter == asteroidSize:
+          print(f"{counter} is just right! We did it!!!!!!!! Asteroid Destroyed!!!!!!!!!!!")
+          asteroidSize = rd.randint(1, 21)
+          counter = 0
+          break
+        elif counter > 0:
+          print(f"{counter} too much!! AAAAAAHHHHHH!!!!!")
+          counter = 0
+          break
+  pg.display.update()
+  fpsClock.tick(FPS)
 
 main()
