@@ -166,6 +166,8 @@ while True :
     print("Final Score... ")
     print(f"{score}!!")
     highScore()
+    if score == 10:
+      stero()
     tm.sleep(10)
     roundCount = 1
 
