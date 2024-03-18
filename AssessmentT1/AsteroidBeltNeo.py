@@ -80,11 +80,41 @@ def drawAsteroid(size: str):
 def drawExplosion(size: str):
   match size:
     case "small":
-      WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 75))
+      startTime = tm.time()
+      while tm.time() - startTime < 1:
+        if missileFired:
+          fireMissile(tempCounter)
+      while tm.time() - startTime < 3:
+        WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 75))
+        for event in pg.event.get():
+          if event.type == pg.QUIT :
+            pg.quit()
+            sys.exit()
+          pg.display.update()
     case "med":
-      WINDOW.blit(medExplosion, (WINDOWX_CENTRE - 125, 75))
+      startTime = tm.time()
+      while tm.time() - startTime < 1:
+        if missileFired:
+          fireMissile(tempCounter)
+      while tm.time() - startTime < 3:
+        WINDOW.blit(medExplosion, (WINDOWX_CENTRE - 125, 75))
+        for event in pg.event.get():
+          if event.type == pg.QUIT :
+            pg.quit()
+            sys.exit()
+          pg.display.update()
     case "large":
-      WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, 0))
+      startTime = tm.time()
+      while tm.time() - startTime < 1:
+        if missileFired:
+          fireMissile(tempCounter)
+      while tm.time() - startTime < 3:
+        WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, 0))
+        for event in pg.event.get():
+          if event.type == pg.QUIT :
+            pg.quit()
+            sys.exit()
+          pg.display.update()
 
 # Initialising random number
 asteroidSize = rd.randint(1, 21)
@@ -107,9 +137,6 @@ while True :
     drawAsteroid("med")
   else:
     drawAsteroid("large")
-  
-  if missileFired:
-    fireMissile(tempCounter)
 
   # New section: wait for spacebar press
   for event in pg.event.get():
@@ -125,21 +152,23 @@ while True :
         missileFired = True
         fireMissile(tempCounter)
         if counter == 0:
-          print(f"{counter} is literally 0. We're crashing!!!")
+          print(f"{counter} is literally 0.")
           counter = 0
           break
         elif counter < asteroidSize:
           print(f"{counter} isn't enough!!! Try Again!!!!")
+          drawExplosion("small")
           counter = 0
           break
         elif counter == asteroidSize:
           print(f"{counter} is just right! We did it!!!!!!!! Asteroid Destroyed!!!!!!!!!!!")
+          drawExplosion("med")
           asteroidSize = rd.randint(1, 21)
           counter = 0
           break
         elif counter > 0:
-          print(f"{counter} too much!! AAAAAAHHHHHH!!!!!")
-          asteroidSize = rd.randint(1,21)
+          print(f"{counter} is too much!! AAAAAAHHHHHH!!!!!")
+          drawExplosion("large")
           counter = 0
           break
   pg.display.update()
