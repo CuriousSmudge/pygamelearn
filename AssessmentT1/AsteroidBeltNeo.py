@@ -198,8 +198,8 @@ while True :
       if event.key == pg.K_SPACE:
         tempCounter = counter
         missileFired = True
-        counter = 100
-        tempCounter = 100
+        #counter = 100
+        #tempCounter = 100
         fireMissile(tempCounter)
         if counter == 0:
           print(f"{counter} is literally 0.")
