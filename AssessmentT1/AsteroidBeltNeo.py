@@ -41,12 +41,12 @@ WINDOWX_CENTRE = WINDOW_WIDTH / 2
 WINDOWY_CENTRE = WINDOW_HEIGHT / 2
 
 WINDOW = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pg.display.set_caption('Asteroid Belt Neo Ultra X Super +')
+pg.display.set_caption('Asteroid Belt Neo Ultra X Super + The Sequel The Prequel The Second Coming 2')
 
 # rotatedImage, rotatedImageRect = rotate(image, angle, (coordsx, coordsy))
 
 def fireMissile(size: int):
-  global missileY, missile, missileFired, missile_fire_time
+  global missileY, missile, missileFired, missile_fire_time, asteroidSize
   scaleFactor = size / 5
   neoMissile = pg.transform.smoothscale(missile, (missile.get_width() * scaleFactor, missile.get_height() * scaleFactor))
   if missileY >= 75:
@@ -55,6 +55,7 @@ def fireMissile(size: int):
   else: 
     missileY = 650
     missileFired = False
+    end()
 
 def rotate(img: pg.Surface, angle: float, centerCords: tuple) -> pg.Surface:
   topleft = centerCords
@@ -80,41 +81,42 @@ def drawAsteroid(size: str):
 def drawExplosion(size: str):
   match size:
     case "small":
-      startTime = tm.time()
-      while tm.time() - startTime < 1:
-        if missileFired:
-          fireMissile(tempCounter)
-      while tm.time() - startTime < 3:
-        WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 75))
-        for event in pg.event.get():
-          if event.type == pg.QUIT :
-            pg.quit()
-            sys.exit()
-          pg.display.update()
+      WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 75))
+
     case "med":
-      startTime = tm.time()
-      while tm.time() - startTime < 1:
-        if missileFired:
-          fireMissile(tempCounter)
-      while tm.time() - startTime < 3:
-        WINDOW.blit(medExplosion, (WINDOWX_CENTRE - 125, 75))
-        for event in pg.event.get():
-          if event.type == pg.QUIT :
-            pg.quit()
-            sys.exit()
-          pg.display.update()
+      WINDOW.blit(medExplosion, (WINDOWX_CENTRE - 125, 50))
+
     case "large":
-      startTime = tm.time()
-      while tm.time() - startTime < 1:
-        if missileFired:
-          fireMissile(tempCounter)
-      while tm.time() - startTime < 3:
-        WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, 0))
-        for event in pg.event.get():
-          if event.type == pg.QUIT :
-            pg.quit()
-            sys.exit()
-          pg.display.update()
+      WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, -300))
+
+  if event.type == pg.QUIT :
+    pg.quit()
+    sys.exit()
+  pg.display.update()
+  tm.sleep(2)
+
+# my hear it s astero it beats for you
+def stero():
+  print("my heats a stero")
+  print("it beats for you so listen close")
+  print("woah/n"*100)
+
+def end():
+  global tempCounter, asteroidSize
+  if tempCounter < 7:
+    drawExplosion("small")
+  elif tempCounter > 6 and tempCounter < 14:
+    if tempCounter == asteroidSize:
+      drawExplosion("med")
+    elif tempCounter < asteroidSize:
+      drawExplosion("small")
+    elif tempCounter > asteroidSize:
+      drawExplosion("med")
+  elif tempCounter > 13:
+    if tempCounter == asteroidSize:
+      drawExplosion("large")
+    if tempCounter != asteroidSize:
+      drawExplosion("med")
 
 # Initialising random number
 asteroidSize = rd.randint(1, 21)
@@ -138,6 +140,9 @@ while True :
   else:
     drawAsteroid("large")
 
+  if missileFired:
+    fireMissile(tempCounter)
+
   # New section: wait for spacebar press
   for event in pg.event.get():
     if event.type == pg.QUIT :
@@ -157,21 +162,16 @@ while True :
           break
         elif counter < asteroidSize:
           print(f"{counter} isn't enough!!! Try Again!!!!")
-          drawExplosion("small")
           counter = 0
           break
         elif counter == asteroidSize:
           print(f"{counter} is just right! We did it!!!!!!!! Asteroid Destroyed!!!!!!!!!!!")
-          drawExplosion("med")
-          asteroidSize = rd.randint(1, 21)
           counter = 0
           break
         elif counter > 0:
           print(f"{counter} is too much!! AAAAAAHHHHHH!!!!!")
-          drawExplosion("large")
           counter = 0
           break
   pg.display.update()
   fpsClock.tick(FPS)
-
 main()
