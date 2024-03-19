@@ -30,6 +30,7 @@ missileFired = False
 score = 0
 counter = 0
 tempCounter = 0
+roundCount = 1
 
 # Game Setup
 FPS = 60
@@ -43,8 +44,8 @@ WINDOWY_CENTRE = WINDOW_HEIGHT / 2
 WINDOW = pg.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pg.display.set_caption('Asteroid Belt Neo Ultra X Super + The Sequel The Prequel The Second Coming 2')
 
-# rotatedImage, rotatedImageRect = rotate(image, angle, (coordsx, coordsy))
-
+# Functions
+## Function for Missile Scaling and Shooting Animation. Links to end() function
 def fireMissile(size: int):
   global missileY, missile, missileFired, missile_fire_time, asteroidSize
   scaleFactor = size / 5
@@ -57,12 +58,14 @@ def fireMissile(size: int):
     missileFired = False
     end()
 
+## Function to make asteroids rotate. Hasn't actually been implemented yet sadly.
 def rotate(img: pg.Surface, angle: float, centerCords: tuple) -> pg.Surface:
   topleft = centerCords
   rotatedImg = pg.transform.rotate(img, -angle)
   newRect = rotatedImg.get_rect(center = img.get_rect(topleft=topleft).center)
   return rotatedImg, newRect
 
+## Function to draw the asteroids. the rotate code doesn't work.
 def drawAsteroid(size: str):
   match size:
     case "small":
@@ -78,6 +81,7 @@ def drawAsteroid(size: str):
       print("That's not an asteroid size stupid!!")
   pass
 
+## Explosion function!!! 
 def drawExplosion(size: str):
   match size:
     case "small":
@@ -89,11 +93,15 @@ def drawExplosion(size: str):
     case "large":
       WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, -300))
 
+    case "XL":
+      WINDOW.blit(largeExplosion, (WINDOWX_CENTRE - 500, -300))
+      WINDOW.blit(smallExplosion, (WINDOWX_CENTRE - 66, 650))
+
   if event.type == pg.QUIT :
     pg.quit()
     sys.exit()
   pg.display.update()
-  tm.sleep(2)
+  tm.sleep(1.25)
 
 # my hear it s astero it beats for you
 def stero():
@@ -101,22 +109,50 @@ def stero():
   print("it beats for you so listen close")
   print("woah/n"*100)
 
+## Function for what size explosion there should be at the end of the game.
 def end():
   global tempCounter, asteroidSize
   if tempCounter < 7:
-    drawExplosion("small")
+    if tempCounter < asteroidSize and tempCounter != 0:
+      drawExplosion("small")
+    elif tempCounter == asteroidSize:
+      drawExplosion("small")
+      asteroidSize = rd.randint(1,21)
+    elif tempCounter > asteroidSize:
+      drawExplosion("XL")
+      asteroidSize = rd.randint(1,21)
   elif tempCounter > 6 and tempCounter < 14:
     if tempCounter == asteroidSize:
       drawExplosion("med")
+      asteroidSize = rd.randint(1,21)
     elif tempCounter < asteroidSize:
       drawExplosion("small")
     elif tempCounter > asteroidSize:
-      drawExplosion("med")
+      drawExplosion("XL")
+      asteroidSize = rd.randint(1,21)
   elif tempCounter > 13:
     if tempCounter == asteroidSize:
       drawExplosion("large")
-    if tempCounter != asteroidSize:
+      asteroidSize = rd.randint(1,21)
+    elif tempCounter < asteroidSize:
       drawExplosion("med")
+    elif tempCounter > asteroidSize:
+      drawExplosion("XL")
+      asteroidSize = rd.randint(1,21)
+
+def highScore() :
+    highScores = open('AssessmentT1\\recordScores.txt', 'a')
+   
+    name = input('Player name : ')
+    highScores.write(f'{name},{score}\n')  	 
+    print('Scores saved to file.')
+    scores = open('AssessmentT1\\recordScores.txt')
+    line = scores.readline().strip()
+    while line != '' :
+        fields = line.split(',')
+        print (f'Player {fields[0]} got a score of : {fields[1]}')
+        line = scores.readline().strip()
+    highScores.close() 
 
 # Initialising random number
 asteroidSize = rd.randint(1, 21)
@@ -125,6 +161,13 @@ asteroidSize = rd.randint(1, 21)
 while True :        
   # Render elements of the game
   WINDOW.fill(BACKGROUND)
+
+  if roundCount == 10:
+    print("Final Score... ")
+    print(f"{score}!!")
+    highScore()
+    tm.sleep(10)
+    roundCount = 1
 
   # Spaceship animation
   if spaceShipY >= 650:
@@ -155,6 +198,8 @@ while True :
       if event.key == pg.K_SPACE:
         tempCounter = counter
         missileFired = True
+        counter = 100
+        tempCounter = 100
         fireMissile(tempCounter)
         if counter == 0:
           print(f"{counter} is literally 0.")
@@ -166,11 +211,17 @@ while True :
           break
         elif counter == asteroidSize:
           print(f"{counter} is just right! We did it!!!!!!!! Asteroid Destroyed!!!!!!!!!!!")
+          roundCount = roundCount + 1
+          score += 1
           counter = 0
+          print(f"Round {roundCount + 1}")
           break
         elif counter > 0:
-          print(f"{counter} is too much!! AAAAAAHHHHHH!!!!!")
+          print(f"{counter} is too much!! You Died!!!!")
+          roundCount = roundCount + 1
+          score -= 1
           counter = 0
+          print(f"Round {roundCount + 1}")
           break
   pg.display.update()
   fpsClock.tick(FPS)
