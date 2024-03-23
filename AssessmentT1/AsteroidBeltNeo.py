@@ -47,7 +47,7 @@ pg.display.set_caption('Asteroid Belt Neo Ultra X Super + The Sequel The Prequel
 # Functions
 ## Function for Missile Scaling and Shooting Animation. Links to end() function
 def fireMissile(size: int):
-  global missileY, missile, missileFired, missile_fire_time, asteroidSize
+  global missileY, missile, missileFired, asteroidSize
   scaleFactor = size / 5
   neoMissile = pg.transform.smoothscale(missile, (missile.get_width() * scaleFactor, missile.get_height() * scaleFactor))
   if missileY >= 75:
