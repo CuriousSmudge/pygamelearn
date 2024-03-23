@@ -30,7 +30,7 @@ missileFired = False
 score = 0
 counter = 0
 tempCounter = 0
-roundCount = 1
+roundCount = 0
 
 # Game Setup
 FPS = 60
@@ -141,18 +141,21 @@ def end():
       asteroidSize = rd.randint(1,21)
 
 def highScore() :
-    highScores = open('AssessmentT1\\recordScores.txt', 'a')
-   
-    name = input('Player name : ')
-    highScores.write(f'{name},{score}\n')  	 
-    print('Scores saved to file.')
-    scores = open('AssessmentT1\\recordScores.txt')
-    line = scores.readline().strip()
-    while line != '' :
-        fields = line.split(',')
-        print (f'Player {fields[0]} got a score of : {fields[1]}')
-        line = scores.readline().strip()
-    highScores.close() 
+  global score
+  highScores = open('AssessmentT1\\recordScores.txt', 'a+')
+  
+  name = input('Player name : ')
+  highScores.write(f'{name},{score}\n')  	 
+  print('Scores saved to file.')
+
+  highScores.seek(0)
+  scores = highScores.readlines()
+  scores = [(s.split(',')[0], int(s.split(',')[1])) for s in scores]
+  scores.sort(key=lambda x: x[1], reverse=True)
+
+  for name, score in scores:
+    print(f"Player {name} got a score of {score}")
+  highScores.close() 
 
 # Initialising random number
 asteroidSize = rd.randint(1, 21)
@@ -200,8 +203,9 @@ while True :
       if event.key == pg.K_SPACE:
         tempCounter = counter
         missileFired = True
-        #counter = 100
-        #tempCounter = 100
+        #test values
+        ##counter = 100
+        ##tempCounter = 100
         fireMissile(tempCounter)
         if counter == 0:
           print(f"{counter} is literally 0.")
